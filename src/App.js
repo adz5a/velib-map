@@ -5,6 +5,9 @@ import {
     Message1,
     Message2
 } from "components/Message";
+import {
+    Map
+} from "components/Map";
 import "components/gmap";
 
 class App extends Component {
@@ -24,6 +27,7 @@ class App extends Component {
         <Message2 
             message="cruel world"
         />
+        <Map />
       </div>
     );
   }
