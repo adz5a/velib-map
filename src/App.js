@@ -5,6 +5,7 @@ import {
     Message1,
     Message2
 } from "components/Message";
+import "components/gmap";
 
 class App extends Component {
   render() {
