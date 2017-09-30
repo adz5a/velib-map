@@ -15,6 +15,7 @@ export interface MVCObject<E> {
 }
 export interface MVCEvent {
     name: string;
+    // stores the "shape" of the event
     value: any;
 }
 export interface MVCEventSub {
@@ -42,7 +43,7 @@ declare namespace google {
         }
 
         export namespace events {
-            export type names = "center_changed" | "click";
+            export type names = "center_changed" | "click" | "idle";
             export interface Event extends MVCEvent {
                 name: names;
             }
@@ -56,6 +57,10 @@ declare namespace google {
             }
             export interface CenterChanged extends Event {
                 name: "center_changed";
+                value: undefined;
+            }
+            export interface Idle extends Event {
+                name: "idle";
                 value: undefined;
             }
             export type Events = Click | CenterChanged;

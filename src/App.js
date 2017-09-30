@@ -10,6 +10,41 @@ import {
 } from "components/Map";
 import "components/gmap";
 
+
+const noop = () => {};
+
+const url = params => `https://maps.googleapis.com/maps/api/geocode/json?${Object.keys(params)
+    .reduce((res, key) => {
+        return res + "&" + key + "=" + String(params[key]);
+    }, "")}`
+const key = process.env.GMAP;
+const search = address => {
+
+    return fetch(url({
+        key: process.env.GMAP,
+        address
+    }))
+        .then( response => response.json() )
+        .then( console.log, console.error );
+
+};
+export class Form extends React.Component {
+    render () {
+        const { onSearch = noop } = this.props;
+        return (
+            <form onSubmit={e => {
+                e.preventDefault();
+                onSearch(e.currentTarget.elements.place.value);
+            }}>
+            <input type="text" name="place"/>
+            <input type="submit" value="Go !"/>
+        </form>
+        );
+
+    }
+}
+
+
 class App extends Component {
   render() {
     return (
@@ -18,9 +53,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <p className="App-intro b">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Form onSearch={search}/>
         <Message1 
             message="world"
         />
