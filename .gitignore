@@ -23,3 +23,5 @@ yarn-error.log*
 
 # typescript compiled files
 lib
+
+keys.json
