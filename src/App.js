@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {
-    Message1,
-    Message2
-} from "components/Message";
-import {
     Map
 } from "components/Map";
 import "components/gmap";
@@ -17,7 +13,9 @@ const url = params => `https://maps.googleapis.com/maps/api/geocode/json?${Objec
     .reduce((res, key) => {
         return res + "&" + key + "=" + String(params[key]);
     }, "")}`
+
 const key = process.env.GMAP;
+
 const search = address => {
 
     return fetch(url({
@@ -54,12 +52,6 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <Form onSearch={search}/>
-        <Message1 
-            message="world"
-        />
-        <Message2 
-            message="cruel world"
-        />
         <Map />
       </div>
     );
