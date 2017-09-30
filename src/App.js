@@ -4,10 +4,12 @@ import './App.css';
 import {
     Map
 } from "components/Map";
+import {
+    Form
+} from "components/Search";
 import "components/gmap";
 
 
-const noop = () => {};
 
 const url = params => `https://maps.googleapis.com/maps/api/geocode/json?${Object.keys(params)
     .reduce((res, key) => {
@@ -19,28 +21,13 @@ const key = process.env.GMAP;
 const search = address => {
 
     return fetch(url({
-        key: process.env.GMAP,
+        key,
         address
     }))
         .then( response => response.json() )
         .then( console.log, console.error );
 
 };
-export class Form extends React.Component {
-    render () {
-        const { onSearch = noop } = this.props;
-        return (
-            <form onSubmit={e => {
-                e.preventDefault();
-                onSearch(e.currentTarget.elements.place.value);
-            }}>
-            <input type="text" name="place"/>
-            <input type="submit" value="Go !"/>
-        </form>
-        );
-
-    }
-}
 
 
 class App extends Component {
