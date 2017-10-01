@@ -1,4 +1,5 @@
 declare var global: any;
+declare var process: any;
 
 
 export interface LatLng {
@@ -85,3 +86,70 @@ global.launchMap = () => {
 }
 
 export { google };
+
+export namespace geocode {
+    export type ResultStatus = "OK" | "ZERO_RESULTS";
+    export type ResultTypes = "locality" | "political";
+    export type LocationTypes = "approximate";
+    export interface AddressComponents {
+        long_name: string;
+        short_name: string;
+    }
+    export interface Result {
+        formatted_address: string;
+        geometry: {
+            bounds: {
+                northeast: LatLng;
+                southwest: LatLng;
+            };
+            location: LatLng;
+            location_type: LocationTypes;
+            viewport: {
+                northeast: LatLng;
+                southwest: LatLng;
+            };
+        };
+        place_id: string;
+        types: ResultTypes;
+        address_components: AddressComponents[];
+    }
+    export interface GenericResponse {
+        status: ResultStatus;
+        results: Result[];
+    }
+    export interface EmptyResponse {
+        status: "ZERO_RESULTS";
+        results: Result[] & { length: 0, [idx: number]: undefined }
+    }
+    export interface OKResponse {
+        status: "OK";
+        results: [Result] & Result[];
+    }
+    export type Response = EmptyResponse | OKResponse;
+
+
+    const key: string = process.env.GMAP;
+    const apiURL = "https://maps.googleapis.com/maps/api/geocode/json";
+    const url = ( params: {[prop: string]: string} ): string => {
+
+        const query: string = Object
+            .keys(params)
+            .reduce((res, key) => {
+                return res + "&" + key + "=" + String(params[key]);
+            }, "");
+
+        return `${apiURL}?${query}`;
+
+    };
+
+    export const search = ( address: string ): Promise<Response> => {
+
+        return fetch(url({
+            key,
+            address
+        }))
+            .then( response => response.json() );
+
+    };
+
+}

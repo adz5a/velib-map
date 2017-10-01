@@ -5,29 +5,13 @@ import {
     Map
 } from "components/Map";
 import {
-    Form
+    Search
 } from "components/Search";
 import "components/gmap";
 
 
 
-const url = params => `https://maps.googleapis.com/maps/api/geocode/json?${Object.keys(params)
-    .reduce((res, key) => {
-        return res + "&" + key + "=" + String(params[key]);
-    }, "")}`
 
-const key = process.env.GMAP;
-
-const search = address => {
-
-    return fetch(url({
-        key,
-        address
-    }))
-        .then( response => response.json() )
-        .then( console.log, console.error );
-
-};
 
 
 class App extends Component {
@@ -38,7 +22,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <Form onSearch={search}/>
+        <Search />
         <Map />
       </div>
     );
