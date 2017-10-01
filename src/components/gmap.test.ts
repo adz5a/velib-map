@@ -42,3 +42,18 @@ const r2: geocode.OKResponse = {
         address_components: [],
     }]
 };
+
+
+// fiddle 
+
+/*
+ * Illustrates that typescript does not warn for empty array in union types
+ */
+type EmptyOrNot = never[] | [string];
+
+const a: EmptyOrNot = [];
+const b: string = a[0];
+
+type Union = {a: "foo" } | { a: "bar" };
+// const invalid: Union = {a: "baz" };
+const valid: Union = {a: "foo" };

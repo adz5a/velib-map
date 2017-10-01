@@ -30,7 +30,7 @@ export class Form extends React.Component<FormProps> {
 
 export interface Query {
     value: string;
-    result?: geocode.Response;
+    response?: geocode.Response;
     id: number;
 }
 export interface ListProps {
@@ -45,8 +45,10 @@ export class List extends React.Component<ListProps> {
 
                     const search = <p>{query.value}</p>;
                     let result;
-                    if (query.result) {
-                        result = <p>{query.result.results[0].formatted_address}</p>;
+                    if (query.response) {
+                        const results = query.response.results;
+                        const address = results[0].formatted_address;
+                        result = <p>{address}</p>;
                     } else {
                         result = <p>{"Pending ..."}</p>
                     }
