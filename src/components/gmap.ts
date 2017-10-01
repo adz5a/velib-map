@@ -119,7 +119,7 @@ export namespace geocode {
     }
     export interface EmptyResponse {
         status: "ZERO_RESULTS";
-        results: Result[] & { length: 0, [idx: number]: undefined }
+        results: never[];
     }
     export interface OKResponse {
         status: "OK";
