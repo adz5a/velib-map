@@ -31,7 +31,7 @@ export class Form extends React.Component<FormProps> {
 export interface Query {
     value: string;
     response?: geocode.Response;
-    id: number;
+    id: string;
 }
 export interface ListProps {
     queries: Query[];
@@ -43,16 +43,20 @@ export class List extends React.Component<ListProps> {
             <ul>
                 {this.props.queries.map((query, idx) => {
 
-                    const search = <p>{query.value}</p>;
                     let result;
+                    const looking = <p>{query.value}</p>;
                     if (query.response) {
                         const results = query.response.results;
-                        const address = results[0].formatted_address;
-                        result = <p>{address}</p>;
+                        if ( results.length > 0 ) {
+                            const address = results[0].formatted_address;
+                            result = <p>{address}<button>Zoom</button></p>;
+                        } else {
+                            result = <p>No Results</p>
+                        }
                     } else {
                         result = <p>{"Pending ..."}</p>
                     }
-                    return <li key={idx}>{search}{result}</li>;
+                    return <li key={idx}>{looking}{result}</li>;
 
                 })}
             </ul>
@@ -62,7 +66,35 @@ export class List extends React.Component<ListProps> {
 }
 
 
-export class Search extends React.Component<{}, any> {
+export interface SearchState {
+    queries: Query[];
+}
+export const addQuery = ( state: SearchState, value: string, id: string ): SearchState => {
+    return {
+        ...state,
+        queries: [
+            ...state.queries,
+            {
+                value,
+                id
+            }
+        ]
+    };
+};
+export const updateQuery = (state: SearchState, response: geocode.Response, id: string): SearchState => {
+    // mutates the internal queries array property
+    return {
+        ...state,
+        queries: state.queries.reduce((queries: Query[], query: Query) => {
+            if (query.id === id) {
+                query.response = response;
+            } 
+            return queries;
+        }, state.queries)
+    };
+
+};
+export class Search extends React.Component<{}, SearchState> {
 
     componentWillMount () {
         this.setState({
@@ -74,21 +106,22 @@ export class Search extends React.Component<{}, any> {
         return (
             <section>
                 <Form onSearch={search => {
-
-                    this.setState(state => ({
-                        ...state,
-                        queries: [
-                            ...state.queries,
-                            {
-                                search
-                            }
-                        ]
-                    }));
-
+                    const id = String(Date.now());
+                    this.setState(state => addQuery(
+                        state,
+                        search,
+                        id
+                    ));
+                    geocode.search(search).then(response => {
+                        return this.setState(state => updateQuery(
+                            state,
+                            response,
+                            id
+                        ));
+                    });
                 }}/>
                 <List queries={this.state.queries}/>
             </section>
         );
-
     }
 }
