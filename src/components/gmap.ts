@@ -85,6 +85,7 @@ global.launchMap = () => {
     
 }
 
+export type NonEmptyArray<T> = [T] & T[];
 export { google };
 
 export namespace geocode {
@@ -123,7 +124,7 @@ export namespace geocode {
     }
     export interface OKResponse {
         status: "OK";
-        results: [Result] & Result[];
+        results: NonEmptyArray<Result>;
     }
     export type Response = EmptyResponse | OKResponse;
 
