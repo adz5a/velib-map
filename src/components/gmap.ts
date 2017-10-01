@@ -41,6 +41,7 @@ declare namespace google {
         export interface MapOptions {
             zoom: number;
             center: LatLng;
+            draggable: boolean;
         }
 
         export namespace events {

@@ -12,7 +12,10 @@ import "components/gmap";
 
 
 
-
+const center = {
+    lat: -25.363,
+    lng: 131.044
+};
 
 class App extends Component {
   render() {
@@ -23,7 +26,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <Search />
-        <Map />
+        <Map center={center} zoom={3}/>
       </div>
     );
   }
