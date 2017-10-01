@@ -35,6 +35,11 @@ export class Map extends React.Component<Props> implements WithRef {
         );
     }
 
+
+    componentWillReceiveProps ( nextProps: Props ) {
+        console.log(nextProps);
+    }
+
     componentDidMount () {
 
         const hasMapCenter = hasOwn(this.props, "mapCenter");
@@ -57,10 +62,13 @@ export class Map extends React.Component<Props> implements WithRef {
             throw new Error("Missing zoom prop");
         }
 
+        // draggable if prop is not present or if prop is not falsy
+        const draggable = (!hasOwn(this.props, "draggable") || Boolean(this.props.draggable));
+
         this.map = new google.maps.Map(this.container, {
             center,
             zoom: this.props.zoom,
-            draggable: this.props.draggable !== false
+            draggable: draggable && !hasMapCenter
         });
 
 

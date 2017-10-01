@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Action } from 'redux';
-import { geocode } from "./gmap";
+import { geocode, LatLng } from "./gmap";
 
 
 
@@ -35,6 +35,7 @@ export interface Query {
 }
 export interface ListProps {
     queries: Query[];
+    goTo(loc: LatLng): void;
 }
 export class List extends React.Component<ListProps> {
     render () {
@@ -48,8 +49,13 @@ export class List extends React.Component<ListProps> {
                     if (query.response) {
                         const results = query.response.results;
                         if ( results.length > 0 ) {
-                            const address = results[0].formatted_address;
-                            result = <p>{address}<button>Zoom</button></p>;
+                            const [ first ] = results;
+                            result = (
+                                <p>
+                                    {first.formatted_address}
+                                    <button onClick={() => this.props.goTo(first.geometry.location)}>Zoom</button>
+                                </p>
+                            );
                         } else {
                             result = <p>No Results</p>
                         }
@@ -66,6 +72,9 @@ export class List extends React.Component<ListProps> {
 }
 
 
+export interface SearchProps {
+    goTo(loc: LatLng): void;
+}
 export interface SearchState {
     queries: Query[];
 }
@@ -94,7 +103,7 @@ export const updateQuery = (state: SearchState, response: geocode.Response, id: 
     };
 
 };
-export class Search extends React.Component<{}, SearchState> {
+export class Search extends React.Component<SearchProps, SearchState> {
 
     componentWillMount () {
         this.setState({
@@ -120,7 +129,7 @@ export class Search extends React.Component<{}, SearchState> {
                         ));
                     });
                 }}/>
-                <List queries={this.state.queries}/>
+                <List queries={this.state.queries} goTo={this.props.goTo}/>
             </section>
         );
     }
